@@ -1,0 +1,9 @@
+button.bg-transparent {
+  transition-duration: 300ms;
+  cursor: pointer;
+}
+button.bg-transparent:hover {
+  translate: 0 -10%;
+  scale: 125%;
+  background-color: #fff;
+}
