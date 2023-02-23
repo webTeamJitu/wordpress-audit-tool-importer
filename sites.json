@@ -1,0 +1,6 @@
+{
+  "clientInfo": { "name": "", "url": "", "username": "", "password": "", "logo_path": "" },
+  "loginRetries": {},
+  "loginLockouts": {},
+  "siteAvailability": { "status_code": null, "reason": null }
+}
