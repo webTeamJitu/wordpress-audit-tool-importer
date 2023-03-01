@@ -67,7 +67,7 @@ class wat_xslx:
             __client = {"url": url, **__client}
 
             if _client := self.db.exec_fn("fn_ClientsGet", {"url": url}).fetchone():
-                client = {"id": _client["id"], "name": ws.title, **__client}
+                client = {"id": _client["guid"], "name": ws.title, **__client}
             else:
                 client = {"name": ws.title, **__client}
 
