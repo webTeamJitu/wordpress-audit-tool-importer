@@ -67,7 +67,7 @@ class wat_xslx:
             __client = {"url": url, **__client}
 
             if _client := self.db.exec_fn("fn_ClientsGet", {"url": url}).fetchone():
-                client = {"id": _client["guid"], "name": ws.title, **__client}
+                client = {"id": _client["fn_ClientsGet"]["guid"], "name": ws.title, **__client}
             else:
                 client = {"name": ws.title, **__client}
 
@@ -87,7 +87,7 @@ class wat_xslx:
                     {
                         "retries": retries.value,
                         "date": cell.value,
-                        "client_id": _client["id"],
+                        "client_id": _client["fn_ClientsGet"]["id"],
                     },
                 )
         self.db.conn.commit()
@@ -109,7 +109,7 @@ class wat_xslx:
                         "latency": latency or 0,
                         "downtime": downtime or 0,
                         "date_added": cell.value,
-                        "client_id": _client["id"],
+                        "client_id": _client["fn_ClientsGet"]["id"],
                     },
                 )
         self.db.conn.commit()
