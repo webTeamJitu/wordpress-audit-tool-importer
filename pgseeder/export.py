@@ -65,9 +65,9 @@ class wat_xslx:
         for ws, url in self.client_wss.items():
             __client = {"username": "", "password": "", "logo_path": ""}
             __client = {"url": url, **__client}
-
-            if _client := self.db.exec_fn("fn_ClientsGet", {"url": url}).fetchone():
-                client = {"id": _client["fn_ClientsGet"]["guid"], "name": ws.title, **__client}
+            _client = self.db.exec_fn("fn_clientsget", {"url": url}).fetchone()
+            if _client['fn_clientsget']:
+                client = {"id": _client["fn_clientsget"]["guid"], "name": ws.title, **__client}
             else:
                 client = {"name": ws.title, **__client}
 
@@ -76,7 +76,7 @@ class wat_xslx:
 
     def export_login_retries(self):
         for ws, url in self.client_wss.items():
-            _client = self.db.exec_fn("fn_ClientsGet", {"url": url}).fetchone()
+            _client = self.db.exec_fn("fn_clientsget", {"url": url}).fetchone()
             for cell in self.date_cells:
                 retries = ws.cell(cell.row, RETRIES_COL)
                 if retries.value is None:
@@ -87,7 +87,7 @@ class wat_xslx:
                     {
                         "retries": retries.value,
                         "date": cell.value,
-                        "client_id": _client["fn_ClientsGet"]["id"],
+                        "client_id": _client["fn_clientsget"]["id"],
                     },
                 )
         self.db.conn.commit()
@@ -95,13 +95,12 @@ class wat_xslx:
     def export_sites_availability(self):
         __availability = {"status_code": None, "reason": None}
         for ws, url in self.client_wss.items():
-            _client = self.db.exec_fn("fn_ClientsGet", {"url": url}).fetchone()
+            _client = self.db.exec_fn("fn_clientsget", {"url": url}).fetchone()
             for cell in self.date_cells:
                 latency = ws.cell(cell.row, LATENCY_COL).value
                 downtime = ws.cell(cell.row, DOWNTIME_COL).value
                 if latency is None and downtime is None:
                     continue
-
                 self.db.insert(
                     "sites_availability",
                     {
@@ -109,7 +108,7 @@ class wat_xslx:
                         "latency": latency or 0,
                         "downtime": downtime or 0,
                         "date_added": cell.value,
-                        "client_id": _client["fn_ClientsGet"]["id"],
+                        "client_id": _client["fn_clientsget"]["id"],
                     },
                 )
         self.db.conn.commit()
