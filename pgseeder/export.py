@@ -72,7 +72,7 @@ class wat_xslx:
                 client = {"name": ws.title, **__client}
 
             self.db.exec_sp("sp_ClientInsertOrUpdate", client)
-        self.db.conn.commit()
+            self.db.conn.commit()
 
     def export_login_retries(self):
         for ws, url in self.client_wss.items():
