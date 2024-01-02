@@ -65,9 +65,15 @@ class wat_xslx:
         for ws, url in self.client_wss.items():
             __client = {"username": "", "password": "", "logo_path": ""}
             __client = {"url": url, **__client}
-            _client = self.db.exec_fn("fn_clientsget", {"url": url}).fetchone()
-            if _client['fn_clientsget']:
-                client = {"id": _client["fn_clientsget"]["guid"], "name": ws.title, **__client}
+            print(__client)
+            # exit()
+            if _client := self.db.exec_fn("fn_clientsget", {"url": url}).fetchone():
+                print(ws.title)
+                # client = _client["guid"]
+                # client = {"id": _client["guid"], "name": ws.title, **__client}
+                # print(client)
+                # exit()
+                client = {"id": _client["guid"], "name": ws.title, **__client}
             else:
                 client = {"name": ws.title, **__client}
 
@@ -82,12 +88,14 @@ class wat_xslx:
                 if retries.value is None:
                     continue
 
+                # print(_client["id"])
+                # exit()
                 self.db.insert(
                     "login_retries",
                     {
                         "retries": retries.value,
                         "date": cell.value,
-                        "client_id": _client["fn_clientsget"]["id"],
+                        "client_id": _client["id"],
                     },
                 )
         self.db.conn.commit()
@@ -108,7 +116,7 @@ class wat_xslx:
                         "latency": latency or 0,
                         "downtime": downtime or 0,
                         "date_added": cell.value,
-                        "client_id": _client["fn_clientsget"]["id"],
+                        "client_id": _client["id"],
                     },
                 )
         self.db.conn.commit()
